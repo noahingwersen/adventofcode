@@ -61,8 +61,6 @@ func part2(idList1 []int, idList2 []int) int {
 		counter[value] += 1
 	}
 
-	fmt.Println(counter)
-
 	similarity := 0
 	for _, value := range idList1 {
 		similarity += value * counter[value]
@@ -73,7 +71,7 @@ func part2(idList1 []int, idList2 []int) int {
 
 func main() {
 
-	idList1, idList2 := parseFile("test.txt")
+	idList1, idList2 := parseFile("input2.txt")
 
 	fmt.Println(part1(idList1, idList2))
 	fmt.Println(part2(idList1, idList2))
