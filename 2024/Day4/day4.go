@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 )
 
 func check(e error) {
@@ -134,6 +135,8 @@ func part2() int {
 }
 
 func main() {
-	fmt.Println(part1())
-	fmt.Println(part2())
+	start := time.Now()
+	fmt.Printf("Part 1: %v in %v\n", part1(), time.Since(start))
+	half := time.Now()
+	fmt.Printf("Part 2: %v in %v\n", part2(), time.Since(half))
 }

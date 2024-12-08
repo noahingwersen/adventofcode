@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func check(e error) {
@@ -16,7 +17,9 @@ func check(e error) {
 	}
 }
 
-func parseFile(filepath string) ([]int, []int) {
+const filepath = "input.txt"
+
+func parseInput() ([]int, []int) {
 	file, ferr := os.Open(filepath)
 	check(ferr)
 
@@ -38,10 +41,10 @@ func parseFile(filepath string) ([]int, []int) {
 	file.Close()
 
 	return slice1, slice2
-
 }
 
-func part1(idList1 []int, idList2 []int) int {
+func part1() int {
+	idList1, idList2 := parseInput()
 	slices.Sort(idList1)
 	slices.Sort(idList2)
 
@@ -55,7 +58,8 @@ func part1(idList1 []int, idList2 []int) int {
 
 }
 
-func part2(idList1 []int, idList2 []int) int {
+func part2() int {
+	idList1, idList2 := parseInput()
 	counter := make(map[int]int)
 	for _, value := range idList2 {
 		counter[value] += 1
@@ -70,9 +74,8 @@ func part2(idList1 []int, idList2 []int) int {
 }
 
 func main() {
-
-	idList1, idList2 := parseFile("input2.txt")
-
-	fmt.Println(part1(idList1, idList2))
-	fmt.Println(part2(idList1, idList2))
+	start := time.Now()
+	fmt.Printf("Part 1: %v in %v\n", part1(), time.Since(start))
+	half := time.Now()
+	fmt.Printf("Part 2: %v in %v\n", part2(), time.Since(half))
 }
