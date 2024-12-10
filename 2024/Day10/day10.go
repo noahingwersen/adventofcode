@@ -1,15 +1,13 @@
-// TODO: Write a faster solution. BFS is faster for part1, but ideally there's a method that is effecient for both parts
 package main
 
 import (
 	"bufio"
 	"fmt"
-	"maps"
 	"os"
 	"time"
 )
 
-const filepath = "test.txt"
+const filepath = "input.txt"
 
 func parseInput() []string {
 	file, _ := os.Open(filepath)
@@ -33,16 +31,7 @@ func isValid(current *[2]int, next *[2]int, trailMap []string) bool {
 	return heightDifference == 1
 }
 
-func scoreTrail(current [2]int, target [2]int, visited map[[2]int]bool, trailMap []string, part1 bool) int {
-	if current == target {
-		return 1
-	}
-
-	if visited[current] {
-		return 0
-	}
-
-	visited[current] = true
+func scoreTrail(start [2]int, trailMap []string, part1 bool) int {
 	directions := [][2]int{
 		{0, 1},
 		{1, 0},
@@ -50,18 +39,32 @@ func scoreTrail(current [2]int, target [2]int, visited map[[2]int]bool, trailMap
 		{-1, 0},
 	}
 
+	queue := [][2]int{start}
+	visited := make(map[[2]int]bool)
 	score := 0
-	for _, direction := range directions {
-		next := [2]int{current[0] + direction[0], current[1] + direction[1]}
-		if isValid(&current, &next, trailMap) {
-			visitedCopy := make(map[[2]int]bool)
-			maps.Copy(visitedCopy, visited)
-			forkScore := scoreTrail(next, target, visitedCopy, trailMap, part1)
-			if part1 && forkScore == 1 {
-				return 1
-			}
 
-			score += forkScore
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+
+		if part1 {
+			if visited[current] {
+				continue
+			} else {
+				visited[current] = true
+			}
+		}
+
+		if string(trailMap[current[1]][current[0]]) == "9" {
+			score++
+			continue
+		}
+
+		for _, direciton := range directions {
+			next := [2]int{current[0] + direciton[0], current[1] + direciton[1]}
+			if isValid(&current, &next, trailMap) {
+				queue = append(queue, next)
+			}
 		}
 	}
 
@@ -70,22 +73,12 @@ func scoreTrail(current [2]int, target [2]int, visited map[[2]int]bool, trailMap
 
 func part1() int {
 	trailMap := parseInput()
-	var trailStarts [][2]int
-	var trailEnds [][2]int
+	score := 0
 	for y, row := range trailMap {
 		for x, char := range row {
 			if char == '0' {
-				trailStarts = append(trailStarts, [2]int{x, y})
-			} else if char == '9' {
-				trailEnds = append(trailEnds, [2]int{x, y})
+				score += scoreTrail([2]int{x, y}, trailMap, true)
 			}
-		}
-	}
-
-	score := 0
-	for _, start := range trailStarts {
-		for _, end := range trailEnds {
-			score += scoreTrail(start, end, make(map[[2]int]bool), trailMap, true)
 		}
 	}
 
@@ -94,22 +87,12 @@ func part1() int {
 
 func part2() int {
 	trailMap := parseInput()
-	var trailStarts [][2]int
-	var trailEnds [][2]int
+	score := 0
 	for y, row := range trailMap {
 		for x, char := range row {
 			if char == '0' {
-				trailStarts = append(trailStarts, [2]int{x, y})
-			} else if char == '9' {
-				trailEnds = append(trailEnds, [2]int{x, y})
+				score += scoreTrail([2]int{x, y}, trailMap, false)
 			}
-		}
-	}
-
-	score := 0
-	for _, start := range trailStarts {
-		for _, end := range trailEnds {
-			score += scoreTrail(start, end, make(map[[2]int]bool), trailMap, false)
 		}
 	}
 
