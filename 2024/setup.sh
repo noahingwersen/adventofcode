@@ -23,9 +23,8 @@ touch $gofile
 # File template
 printf "package main\n\n" >> $gofile
 printf "import (\n\t\"bufio\"\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n" >> $gofile
-printf "func check(e error) {\n\tif e != nil {\n\t\tpanic(e)\n\t}\n}\n\n" >> $gofile
 printf "const filepath = \"test.txt\"\n\n" >> $gofile
-printf "func parseInput() []string {\n\tfile, ferr := os.Open(filepath)\n\tcheck(ferr)\n\n\t" >> $gofile
+printf "func parseInput() []string {\n\tfile, _ := os.Open(filepath)\n\n\t" >> $gofile
 printf "scanner := bufio.NewScanner(file)\n\tvar lines []string\n\t" >> $gofile
 printf "for scanner.Scan() {\n\t\tlines = append(lines, scanner.Text())\n\t}\n\tfile.Close()\n\treturn lines\n}\n\n" >> $gofile
 printf "func part1() int {\n\treturn 0\n}\n\n" >> $gofile
