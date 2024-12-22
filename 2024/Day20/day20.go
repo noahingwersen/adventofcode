@@ -7,12 +7,6 @@ import (
 	"time"
 )
 
-// type node struct {
-// 	position [2]int
-// 	cheat    bool
-// 	steps    int
-// }
-
 const filepath = "input.txt"
 
 func parseInput() [][]byte {
@@ -20,20 +14,12 @@ func parseInput() [][]byte {
 	return bytes.Split(file, []byte{'\n'})
 }
 
-func isValid(position [2]int, canCheat bool, racetrack [][]byte) (bool, bool) {
+func isValid(position [2]int, racetrack [][]byte) bool {
 	if position[0] < 0 || position[0] >= len(racetrack[0]) || position[1] < 0 || position[1] >= len(racetrack) {
-		return false, false
+		return false
 	}
 
-	inWall := racetrack[position[1]][position[0]] == '#'
-	if inWall {
-		if canCheat {
-			return true, true
-		} else {
-			return false, false
-		}
-	}
-	return true, false
+	return racetrack[position[1]][position[0]] != '#'
 }
 
 func bfs(start [2]int, end [2]int, racetrack [][]byte) map[[2]int]int {
@@ -52,9 +38,8 @@ func bfs(start [2]int, end [2]int, racetrack [][]byte) map[[2]int]int {
 
 		for _, direction := range directions {
 			neighbor := [2]int{current[0] + direction[0], current[1] + direction[1]}
-			valid, _ := isValid(neighbor, false, racetrack)
 			_, visited := predecessors[neighbor]
-			if valid && !visited && neighbor != start {
+			if !visited && isValid(neighbor, racetrack) && neighbor != start {
 				queue = append(queue, neighbor)
 				predecessors[neighbor] = current
 			}
