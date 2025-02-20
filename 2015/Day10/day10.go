@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 func lookAndSay(number []byte) []byte {
 	index := 0
@@ -21,7 +24,7 @@ func lookAndSay(number []byte) []byte {
 }
 
 func main() {
-	number := []byte("1113222113")
+	number, _ := os.ReadFile("input.txt")
 	for iteration := range 50 {
 		number = lookAndSay(number)
 		if iteration == 39 {
